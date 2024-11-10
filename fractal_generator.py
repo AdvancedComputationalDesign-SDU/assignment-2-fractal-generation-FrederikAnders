@@ -1,87 +1,86 @@
 """
 Assignment 2: Fractal Generator
 
-Author: Your Name
+Author: Frederik Andersen
 
 Description:
 This script generates fractal patterns using recursive functions and geometric transformations.
 """
 
 # Import necessary libraries
-import math
+from shapely.geometry import LineString, Point 
+from shapely.affinity import translate, rotate
+from shapely.plotting import plot_line, plot_points, plot_polygon 
 import matplotlib.pyplot as plt
-from shapely.geometry import LineString
-from shapely.affinity import rotate, translate
 import random
 
-# Global list to store all line segments
-line_list = []
+# initializing empty list for branches
+tree_branches = []
+fact = random.random()
 
-def generate_fractal(start_point, angle, length, depth, max_depth, angle_change, length_scaling_factor):
-    """
-    Recursive function to generate fractal patterns.
+# Starting curve: a vertical line represented as a LineString 
+x = LineString([(0, 0), (0, 1)])
+tree_branches.append([x]) # Initial set of branches contains only the starting curve. Add x at the end of the tree_branch
 
-    Parameters:
-    - start_point: Tuple (x, y), starting coordinate.
-    - angle: Float, current angle in degrees.
-    - length: Float, length of the current line segment.
-    - depth: Int, current recursion depth.
-    - max_depth: Int, maximum recursion depth.
-    - angle_change: Float, angle change at each recursion.
-    - length_scaling_factor: Float, scaling factor for the length.
-    """
-    if depth > max_depth:
-        return
+def recursive_tree(curve_list, counter, angle, kinks, tilt): #the stuff in the brackets are parameters for the funtion
+    new_branches = []       #list to store the new branches that will be made
+    
+    for curve in curve_list:    #loops over each curve (branch) in the list
+        # calculate the end-start difference to perform the translation in x and y 
+        dx = curve.coords[-1][0] - curve.coords[0][0]
+        dy = curve.coords[-1][1] - curve.coords[0][1]
+        
+        # generate kinks within the branch
+        # create series of slighty offset points along branch 
+        segment_length = 1 / (kinks + 1)    # define/calculate length of each segment along the branch
+        kink_points = [curve.coords[-1]]    # endpoint of current branch/curve. This will be the startingpoint for the creating the kinked path
 
-    # Calculate the end point of the line segment
-    end_x = start_point[0] + length * math.cos(math.radians(angle))
-    end_y = start_point[1] + length * math.sin(math.radians(angle))
-    end_point = (end_x, end_y)
+        for _ in range(kinks):
+            # extend segment with random small offsets for generating kinks
+            dx_kink = dx * segment_length
+            dy_kink = dy * segment_length
 
-    # Create a line segment using Shapely
-    line = LineString([start_point, end_point])
-    line_list.append(line)
+            kink_point = translate(Point(kink_points[-1]), xoff=dx_kink, yoff=dy_kink)      # Point(kink_points[-1]) takes last point in kink_points which will act as a base from which the new kink will be offset
+            kink_point = rotate(kink_point, angle * (random.random() - tilt) * 2, origin=kink_points[-1], use_radians=False)     # rotate new kink point around previous kink point by random small angle. 
+            kink_points.append(kink_point)  # add the new kink point to kink_points, so the next kink can build upon this point
 
-    # Update the length for the next recursion
-    new_length = length * length_scaling_factor
+        kinked_curve = LineString(kink_points)  #string the points together
 
-    # Increment depth
-    next_depth = depth + 1
+        # rotate the kinked curve to create left and right branches
+        branch_left = rotate(kinked_curve, angle * fact, origin=curve.coords[-1], use_radians=False)
+        branch_right = rotate(kinked_curve, -angle * fact, origin=curve.coords[-1], use_radians=False)
 
-    # Recursive calls for branches
-    generate_fractal(end_point, angle + angle_change, new_length, next_depth, max_depth, angle_change, length_scaling_factor)
-    generate_fractal(end_point, angle - angle_change, new_length, next_depth, max_depth, angle_change, length_scaling_factor)
+        # add the two new branches to the list of branches that will be used in the next recursion level
+        new_branches.extend([branch_left, branch_right])    
+        
 
-# Main execution
-if __name__ == "__main__":
-    # Parameters
-    start_point = (0, 0)
-    initial_angle = 90
-    initial_length = 100
-    recursion_depth = 0
-    max_recursion_depth = 5
-    angle_change = 30
-    length_scaling_factor = 0.7
+    # count recersions and define stop for recursions
+    counter += 1
+    tree_branches.append(new_branches) 
+    if counter < recursion_depth:       # if n recursions is reached, print
+        print(counter)
+        recursive_tree(new_branches, counter, angle, kinks, tilt)
 
-    # Clear the line list
-    line_list.clear()
+# Parameters:
+recursion_depth = 5
+angle = 30          # Angle for branches
+kinks = 3           # number of kinks per branch
+tilt = 0.35         # tilt kinks towards the right or left. (0 = far left, 0.5 = middle, 1 = far right)
 
-    # Generate the fractal
-    generate_fractal(start_point, initial_angle, initial_length, recursion_depth, max_recursion_depth, angle_change, length_scaling_factor)
+recursive_tree([x], 0, angle, kinks, tilt)
 
-    # Visualization
-    fig, ax = plt.subplots()
-    for line in line_list:
-        x, y = line.xy
-        ax.plot(x, y, color='green', linewidth=1)
 
-    # Optional: Customize the plot
-    ax.set_aspect('equal')
-    plt.axis('off')
-    plt.show()
+# Plotting the result using Matplotlib 
+fig, ax = plt.subplots()
+for level in tree_branches: 
+    for branch in level:
+        plot_line(branch, add_points=False, color='black',linewidth=1)
 
-    # Save the figure
-    fig.savefig('images/fractal_tree.png', dpi=300, bbox_inches='tight')
+ax.set_aspect(1) 
+plt.axis('off') 
+plt.show()
 
-    # Repeat the process with different parameters for additional fractals
-    # ...
+
+git add .
+git commit -m "set up branches with kinks"
+git push origin main
