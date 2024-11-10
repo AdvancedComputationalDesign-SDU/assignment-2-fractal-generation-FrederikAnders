@@ -96,22 +96,6 @@ tilt = 0.3 (tilt for kink direction)
 ![Image 5](images/fig_5-depth10_angle30_kinks5_tilt0.3.png)
 
 
-Example:
-
-### Fractal Pattern 1: Basic Fractal Tree
-
-![Fractal Tree](images/example.png)
-
-- **Parameters**:
-  - `angle_change`: 30°
-  - `length_scaling_factor`: 0.7
-  - `recursion_depth`: 5
-- **Observations**:
-  - The fractal tree exhibits symmetry and balance.
-  - As the recursion depth increases, the level of detail in the branches increases.
-
-*(Repeat for other fractal patterns.)*
-
 ---
 
 ## References

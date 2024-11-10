@@ -89,6 +89,3 @@ ax.set_aspect(1)
 plt.axis('off') 
 plt.show()
 
-git add .
-git commit -m
-git push origin main
