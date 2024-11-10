@@ -14,17 +14,19 @@ from shapely.plotting import plot_line, plot_points, plot_polygon
 import matplotlib.pyplot as plt
 import random
 
-# apply color (gradient color)
+# apply gradient color
 def get_color(depth, max_depth):
-   return plt.cm.viridis(depth / max_depth)     #viridis is the name of a specific color gradient (you can also try plsma, inferno, etc.)
+   return plt.cm.RdPu(depth / max_depth)     #viridis is the name of a specific color gradient (you can also try plsma, inferno, etc.)
 
 # initializing empty list for branches
 tree_branches = []
 fact = random.random()
 
-# Starting curve: a vertical line represented as a LineString 
+# Initialize starting curve: a vertical line represented as a LineString 
 x = LineString([(0, 0), (0, 1)])
-tree_branches.append([x]) # Initial set of branches contains only the starting curve. Add x at the end of the tree_branch
+
+# Initial set of branches contains only the starting curve. Add x at the end of the tree_branch
+tree_branches.append([x]) 
 
 def recursive_tree(curve_list, counter, angle, kinks, tilt): #the stuff in the brackets are parameters for the funtion
     new_branches = []       #list to store the new branches that will be made
@@ -66,17 +68,17 @@ def recursive_tree(curve_list, counter, angle, kinks, tilt): #the stuff in the b
         recursive_tree(new_branches, counter, angle, kinks, tilt)
 
 # Parameters:
-recursion_depth = 7
+recursion_depth = 10
 angle = 30          # Angle for branches
-kinks = 3           # number of kinks per branch
-tilt = 0.2         # tilt kinks towards the right or left. (0 = far left, 0.5 = middle, 1 = far right)
+kinks = 5           # number of kinks per branch
+tilt = 0.3          # tilt kinks towards the right or left. (0 = far left, 0.5 = middle, 1 = far right)
 
 recursive_tree([x], 0, angle, kinks, tilt)
 
 
 # Plotting the result using Matplotlib 
 fig, ax = plt.subplots()
-fig.patch.set_facecolor('beige') # set color of canvas
+fig.patch.set_facecolor('palegreen') # set color of canvas
 
 for depth, level in enumerate(tree_branches): 
     color = get_color(depth, recursion_depth)   #apply color based on depth of branch
@@ -88,5 +90,4 @@ plt.axis('off')
 plt.show()
 
 git add .
-git commit -m "add colors"
-git push origin main
+git commit -m 
