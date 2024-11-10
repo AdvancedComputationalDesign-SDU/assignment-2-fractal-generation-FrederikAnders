@@ -11,8 +11,6 @@
 
 ## Pseudo-Code
 
-*(Provide detailed pseudo-code explaining the logic of your program. This should clearly outline your recursive functions, parameter definitions, and how they contribute to the final fractal pattern.)*
-
 1. **Define function that generates a color based on recursion depth**
 **function** get_color(depth, max_depth):
     **return** color based on depth / max_depth using color map
@@ -82,35 +80,10 @@ tilt = 0.3 (tilt for kink direction)
 
 ## Technical Explanation
 
-*(Provide a concise explanation of your code, focusing on recursion and geometric manipulations. Discuss how your approach generates the final fractal pattern and the mathematical principles involved.)*
-
-Example:
-
-In my implementation, the `generate_fractal` function recursively draws line segments representing branches of a fractal tree. The function calculates the end point of each line using trigonometric functions based on the current angle and length.
-
-At each recursion step, the function:
-
-- Decreases the `length` by multiplying it with `length_scaling_factor`.
-- Adjusts the `angle` by adding or subtracting `angle_change` to create branching.
-- Calls itself recursively for each branch until the `recursion_depth` reaches zero.
-
-This approach creates a self-similar pattern characteristic of fractals, where each branch splits into smaller branches in a consistent manner.
-
 ---
 
 ## Results
 
-'''
-
-
-![Output image](images/fig_1 - depth_7 angle_30 kinks_3 tilt_0.2.png)
-'''
-![Output image](images/fig_2 - depth_5 angle_40 kinks 7 tilt_0.5.png)
-'''
-![Output image](images/fig_3 - depth_9 angle_90 kinks 1 tilt_0.5.png)
-
-[![Image Description](C:\Users\frede\Documents\GitHub\assignment-2-fractal-generation-FrederikAnders\images\fig_1 - depth_7 angle_30 kinks_3 tilt_0.2.png)](C:\Users\frede\Documents\GitHub\assignment-2-fractal-generation-FrederikAnders\images\fig_1 - depth_7 angle_30 kinks_3 tilt_0.2.png)
-'''
 
 ![Image 1](images/fig_1-depth7_angle30_kinks3_tilt0.2.png)
 
@@ -144,3 +117,4 @@ Example:
 ## References
 
 - **L-Systems**: [https://en.wikipedia.org/wiki/L-system](https://en.wikipedia.org/wiki/L-system)
+
