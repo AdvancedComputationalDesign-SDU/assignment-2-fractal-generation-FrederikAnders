@@ -14,6 +14,10 @@ from shapely.plotting import plot_line, plot_points, plot_polygon
 import matplotlib.pyplot as plt
 import random
 
+# apply color (gradient color)
+def get_color(depth, max_depth):
+   return plt.cm.viridis(depth / max_depth)     #viridis is the name of a specific color gradient (you can also try plsma, inferno, etc.)
+
 # initializing empty list for branches
 tree_branches = []
 fact = random.random()
@@ -62,25 +66,27 @@ def recursive_tree(curve_list, counter, angle, kinks, tilt): #the stuff in the b
         recursive_tree(new_branches, counter, angle, kinks, tilt)
 
 # Parameters:
-recursion_depth = 5
+recursion_depth = 7
 angle = 30          # Angle for branches
 kinks = 3           # number of kinks per branch
-tilt = 0.35         # tilt kinks towards the right or left. (0 = far left, 0.5 = middle, 1 = far right)
+tilt = 0.2         # tilt kinks towards the right or left. (0 = far left, 0.5 = middle, 1 = far right)
 
 recursive_tree([x], 0, angle, kinks, tilt)
 
 
 # Plotting the result using Matplotlib 
 fig, ax = plt.subplots()
-for level in tree_branches: 
+fig.patch.set_facecolor('beige') # set color of canvas
+
+for depth, level in enumerate(tree_branches): 
+    color = get_color(depth, recursion_depth)   #apply color based on depth of branch
     for branch in level:
-        plot_line(branch, add_points=False, color='black',linewidth=1)
+        plot_line(branch, add_points=False, color=color, linewidth=1)
 
 ax.set_aspect(1) 
 plt.axis('off') 
 plt.show()
 
-
 git add .
-git commit -m "set up branches with kinks"
+git commit -m "add colors"
 git push origin main
